@@ -17,7 +17,7 @@ vrrp_instance VIP_01 {
 {% else %}
 	state SLAVE
 {% endif %}
-	interface eth0
+	interface {{ haproxy_eth }}
 	virtual_router_id {{ haproxy_virtual_router_id}}
 {% if haproxy_master %}
 	priority 101

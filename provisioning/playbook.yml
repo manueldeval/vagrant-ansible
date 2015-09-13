@@ -1,13 +1,11 @@
-#- hosts: all
-#  tasks:
-#    - name: update apt cache
-#      apt: update_cache=yes
-
+#=======================
+# Load balancers
+#=======================
 - hosts: lb_master
   roles:
-    - { role: "haproxy", haproxy_vip: "{{lb_vip}}" }
+    - { role: "haproxy", haproxy_vip: "{{lb_vip}}", haproxy_eth: "eth1" }
 
 - hosts: lb_slave
   roles:
-    - { role: "haproxy", haproxy_vip: "{{lb_vip}}", haproxy_master: false }
+    - { role: "haproxy", haproxy_vip: "{{lb_vip}}", haproxy_eth: "eth1", haproxy_master: false }
 
