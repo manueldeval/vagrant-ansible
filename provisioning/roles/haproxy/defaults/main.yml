@@ -1,0 +1,4 @@
+haproxy_vip: "10.10.1.3"
+haproxy_virtual_router_id: 7
+haproxy_lvs_id: "haproxy_core"
+haproxy_master: true

@@ -1,3 +1,21 @@
-- apt: name=haproxy state=present
+- name: "Installation de haproxy et de keepalived"
+  apt: > 
+    name={{ item }} 
+    state=present
+  with_items:
+    - haproxy
+    - keepalived
+    - psmisc
 
-- service: name=haproxy state=started
+- name: "Creation du fichier keepalived"
+  template: > 
+    src=keepalived.conf.j2 
+    dest=/etc/keepalived/keepalived.conf
+  notify:
+    - restart keepalived
+
+- name: "On s'assure que haproxy est bien lance"
+  service: name=haproxy state=started
+
+- name: "On s'assure que keepalived est bien lance"
+  service: name=keepalived state=started

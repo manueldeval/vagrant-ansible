@@ -3,8 +3,10 @@
 lb1 ansible_ssh_host=192.168.33.10 ansible_ssh_private_key_file=.vagrant/machines/lb1/virtualbox/private_key
 lb2 ansible_ssh_host=192.168.33.11 ansible_ssh_private_key_file=.vagrant/machines/lb2/virtualbox/private_key
 
-[lb]
+[lb_master]
 lb1
+
+[lb_slave]
 lb2
 
 

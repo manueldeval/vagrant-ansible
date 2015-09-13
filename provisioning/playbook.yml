@@ -3,6 +3,11 @@
 #    - name: update apt cache
 #      apt: update_cache=yes
 
-- hosts: lb
+- hosts: lb_master
   roles:
-    - haproxy
+    - { role: "haproxy", haproxy_vip: "{{lb_vip}}" }
+
+- hosts: lb_slave
+  roles:
+    - { role: "haproxy", haproxy_vip: "{{lb_vip}}", haproxy_master: false }
+
