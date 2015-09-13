@@ -1,0 +1,8 @@
+#- hosts: all
+#  tasks:
+#    - name: update apt cache
+#      apt: update_cache=yes
+
+- hosts: lb
+  roles:
+    - haproxy
