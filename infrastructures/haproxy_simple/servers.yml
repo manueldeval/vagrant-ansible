@@ -1,0 +1,12 @@
+- name: lb1
+  cpus: 1
+  memory: 512
+  ip: 192.168.33.10
+  groups:
+    - lb_master
+- name: lb2
+  cpus: 1
+  memory: 512
+  ip: 192.168.33.11
+  groups:
+    - lb_slave
