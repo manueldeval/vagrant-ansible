@@ -1,0 +1,15 @@
+sudo /etc/init.d/vboxdrv setup
+
+sudo gem install sahara
+
+
+vagrant up --provider=virtualbox 
+vagrant provision
+vagrant destroy --force
+
+vagrant --custom-option='{"ansible_limit":"lb1"}' provision
+vagrant --custom-option='{"ansible_limit":"lb1"}' up
+
+vagrant sandbox on
+vagrant sandbox rollback
+vagrant sandbox off

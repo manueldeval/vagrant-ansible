@@ -5,7 +5,6 @@ class VagrantHelper
 	    server.vm.hostname=srv["name"]
 	    server.vm.box = boxType
 	    server.vm.network "private_network", ip: srv["ip"]
-	    
 	    config.vm.provider "virtualbox" do |v|
 	        v.memory = srv["memory"]
 	        v.cpus = srv["cpus"]

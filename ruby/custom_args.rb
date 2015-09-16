@@ -4,25 +4,25 @@ require 'json'
 class CustomArgs
 
 	attr_accessor :customOptions
-	attr_accessor :ansible_limit
+
+	# JSON Attributes
 	attr_accessor :box_type
+	attr_accessor :playbook_path
 
 	def initialize
-		opts = GetoptLong.new(
-		  [ '--custom-option', GetoptLong::OPTIONAL_ARGUMENT ]
-		)
 
 		@customOptions={}
-		opts.each do |opt, arg|
-			case opt
-		    	when '--custom-option'
-		      		@customOptions = JSON.parse(arg)
+		ARGV.each do |a|
+			if a.start_with?("--custom-option=")
+				json = a.split("=")[1]
+				puts "#{json}"
+				@customOptions = JSON.parse(json)
 			end
 		end
 
-		@ansible_limit="all"
-        if @customOptions.has_key?("ansible_limit")
-			@ansible_limit=customOptions["ansible_limit"]
+		@playbook_path="infrastructures/haproxy_simple"
+        if @customOptions.has_key?("playbook_path")
+			@playbook_path=customOptions["playbook_path"]
         end
 
 		@box_type="ubuntu/vivid64"
@@ -34,8 +34,8 @@ class CustomArgs
 	def to_s
 		s = "=========================================\n"
 		s << "Custom arguments: \n"
-		s << "	ansible_limit : #{@ansible_limit}\n"
 		s << "	box_type      : #{@box_type}\n"
+		s << "	playbook_path : #{@playbook_path}\n"
 		s << "=========================================\n"
 	end
 end

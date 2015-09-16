@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-#vagrant --custom-option="ansible-limit:all" provision
+#vagrant --custom-option='{"ansible_limit":"lb1"}' provision
 
 
 require 'json'
@@ -17,16 +17,15 @@ puts "#{customArgs}"
 # VAGRANT configuration
 Vagrant.configure(2) do |config|
 
-  serversFromJson = YAML::load(File.open('servers.yml'))
+  serversFromJson = YAML::load(File.open("#{customArgs.playbook_path}/servers.yml"))
 
   VagrantHelper.createServers(serversFromJson,config,customArgs.box_type)
-  AnsibleHelper.createAnsibleInventory(serversFromJson,'./provisioning/hosts');
-
+  AnsibleHelper.createAnsibleInventory(serversFromJson,"#{customArgs.playbook_path}/hosts");
+  config.vm.provider "virtualbox"
   config.vm.provision "ansible" do |ansible|
         ansible.sudo = true
-        ansible.playbook = "provisioning/playbook.yml"
-        ansible.inventory_path = "provisioning/hosts"
-        ansible.extra_vars = "provisioning/extra_vars.yml"
-        ansible.limit=customArgs.ansible_limit
+        ansible.playbook = "#{customArgs.playbook_path}/playbook.yml"
+        ansible.inventory_path = "#{customArgs.playbook_path}/hosts"
+        ansible.extra_vars = "#{customArgs.playbook_path}/extra_vars.yml"
   end
 end

@@ -13,7 +13,7 @@ class AnsibleHelper
 	    memo
 	  end
 
-	  File.open("./provisioning/hosts", 'w') { |file| 
+	  File.open(hostFile, 'w') { |file| 
 	    file.write("# Generated file\n\n")
 
 	    servers.each do |srv|
