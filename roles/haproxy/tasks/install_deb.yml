@@ -1,0 +1,8 @@
+- name: "Installation de haproxy et de keepalived"
+  apt:  
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - haproxy
+    - keepalived
+    - psmisc

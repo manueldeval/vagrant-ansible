@@ -1,15 +1,26 @@
 sudo /etc/init.d/vboxdrv setup
 
+vagrant add debian/jessie64
+vagrant add centos/7
+vagrant add ubuntu/vivid64
+
 sudo gem install sahara
 
 
 vagrant up --provider=virtualbox 
 vagrant provision
-vagrant destroy --force
 
-vagrant --custom-option='{"ansible_limit":"lb1"}' provision
-vagrant --custom-option='{"ansible_limit":"lb1"}' up
+
+
 
 vagrant sandbox on
 vagrant sandbox rollback
 vagrant sandbox off
+
+pip install -U pytest
+vagrant destroy --force
+vagrant --custom-option='{"box_type":"ubuntu/vivid64"}' up 
+vagrant --custom-option='{"box_type":"centos/7"}' up 
+vagrant --custom-option='{"box_type":"debian/jessie64"}' up 
+
+./python/testinfra.sh haproxy_simple

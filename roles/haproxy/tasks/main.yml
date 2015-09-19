@@ -1,21 +1,29 @@
-- name: "Installation de haproxy et de keepalived"
-  apt: > 
-    name={{ item }} 
-    state=present
-  with_items:
-    - haproxy
-    - keepalived
-    - psmisc
+- include: install_deb.yml
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- include: install_rh.yml
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: "On autorise l utilisation d'une interface non definie dans les fichiers"
+  sysctl:
+    name: net.ipv4.ip_nonlocal_bind 
+    value: "1" 
+    state: present
+    reload: yes
 
 - name: "Creation du fichier keepalived"
-  template: > 
-    src=keepalived.conf.j2 
-    dest=/etc/keepalived/keepalived.conf
+  template:
+    src: keepalived.conf.j2 
+    dest: /etc/keepalived/keepalived.conf
   notify:
     - restart keepalived
 
 - name: "On s'assure que haproxy est bien lance"
-  service: name=haproxy state=started
+  service:
+    name: haproxy 
+    state: started
 
 - name: "On s'assure que keepalived est bien lance"
-  service: name=keepalived state=started
+  service: 
+    name: keepalived
+    state: started

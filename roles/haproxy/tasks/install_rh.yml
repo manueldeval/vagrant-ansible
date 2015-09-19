@@ -1,0 +1,9 @@
+- name: "Installation de haproxy et de keepalived"
+  yum:  
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - haproxy
+    - keepalived
+    - psmisc
+
