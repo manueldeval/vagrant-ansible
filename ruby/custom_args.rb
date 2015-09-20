@@ -23,13 +23,16 @@ class CustomArgs
 		@playbook_path="infrastructures/haproxy_simple"
         if @customOptions.has_key?("playbook_path")
 			@playbook_path=customOptions["playbook_path"]
+		elsif ENV.has_key?("playbook_path")
+			@playbook_path=ENV["playbook_path"]
         end
 
 		@box_type="ubuntu/vivid64"
         if @customOptions.has_key?("box_type")
 			@box_type=customOptions["box_type"]
-        end
-	end
+		elsif ENV.has_key?("box_type")
+			@box_type=ENV["box_type"]
+        end	end
 
 	def to_s
 		s = "=========================================\n"

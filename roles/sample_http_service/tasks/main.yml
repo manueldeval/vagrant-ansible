@@ -1,0 +1,50 @@
+- name: "Cree le groupe s'il n'existe pas"
+  group:
+    name: "{{sample_http_service_group}}"
+    state: present
+
+- name: "cree l'utilisateur s'il n'existe pas"
+  user: 
+    name: "{{sample_http_service_user}}" 
+    group: "{{sample_http_service_group}}" 
+
+- name: "Cree le repertoire cible s'il n'existe pas"
+  file:
+    path: "{{sample_http_service_path}}"
+    state: directory
+    recurse: yes
+    owner: "{{sample_http_service_user}}"
+    group: "{{sample_http_service_group}}"
+
+- name: "Copie le service dans le repertoire destination" 
+  copy: 
+    src: sample_http_service.py
+    dest: "{{sample_http_service_path}}/sample_http_service.py"
+    owner: "{{sample_http_service_user}}"
+    group: "{{sample_http_service_group}}"
+    mode: u+rw
+
+- template: 
+    src: "{{item}}"
+    dest: "{{sample_http_service_path}}/{{item}}"
+    owner: "{{sample_http_service_user}}"
+    group: "{{sample_http_service_group}}"    
+    mode: u+rwx
+  with_items:
+    - start.sh
+    - stop.sh
+
+- template: 
+    src: "sample_http_service.service"
+    dest: "/etc/systemd/system/sample_http_service.service"
+    owner: "{{sample_http_service_user}}"
+    group: "{{sample_http_service_group}}"   
+    mode: u+rwx
+
+- service:
+    name: sample_http_service
+    enabled: yes
+
+- service:
+    name: sample_http_service
+    state: started

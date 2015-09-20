@@ -1,6 +1,8 @@
 from InfraUnit import infra
 import time 
 
+infraPath="infrastructures/haproxy_simple"
+
 def test_vip_is_on_lb1(infra):
 	vipOnLb1 = infra.server('lb1').ssh('ip addr show').stdoutContains("192.168.33.201")
 	assert  vipOnLb1 == True

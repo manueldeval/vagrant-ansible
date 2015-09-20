@@ -6,6 +6,8 @@ vagrant add ubuntu/vivid64
 
 sudo gem install sahara
 
+export box_type=ubuntu/vivid64
+export playbook_path=infrastructures/sample_http_service
 
 vagrant up --provider=virtualbox 
 vagrant provision
@@ -19,7 +21,11 @@ vagrant sandbox off
 
 pip install -U pytest
 vagrant destroy --force
-vagrant --custom-option='{"box_type":"ubuntu/vivid64"}' up 
+
+
+vagrant --custom-option='{"box_type":"ubuntu/vivid64", "playbook_path":"infrastructures/sample_http_service"}' up 
+vagrant --custom-option='{"box_type":"ubuntu/vivid64", "playbook_path":"infrastructures/sample_http_service"}' provision
+
 vagrant --custom-option='{"box_type":"centos/7"}' up 
 vagrant --custom-option='{"box_type":"debian/jessie64"}' up 
 

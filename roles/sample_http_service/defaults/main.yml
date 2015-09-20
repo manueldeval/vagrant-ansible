@@ -1,0 +1,4 @@
+sample_http_service_port: 8001
+sample_http_service_user: "sample_http_service"
+sample_http_service_group: "sample_http_service"
+sample_http_service_path: "/opt/sample_http_service/"

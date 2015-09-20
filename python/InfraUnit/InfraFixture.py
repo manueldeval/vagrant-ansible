@@ -3,11 +3,12 @@ from Infrastructure import Infrastructure
 
 INFRA = None
 
-@pytest.fixture
-def infra():
+@pytest.fixture(scope="module")
+def infra(request):
 	global INFRA
 	if INFRA == None:
-		INFRA = Infrastructure("./infrastructures/haproxy_simple","./")
+		infraPath = getattr(request.module, "infraPath")
+		INFRA = Infrastructure(infraPath,"./")
 		INFRA.init()
 	return INFRA
 

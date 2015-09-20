@@ -1,0 +1,11 @@
+[Unit]
+Description=Juste un serveur web de demonstration
+After=network.target
+[Service]
+Type=forking
+ExecStart={{sample_http_service_path}}/start.sh
+ExecStop={{sample_http_service_path}}/stop.sh
+User={{sample_http_service_user}}
+
+[Install]
+WantedBy=multi-user.target
