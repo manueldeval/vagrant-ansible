@@ -1,0 +1,108 @@
+== Description ==
+
+Ce repo propose :
+
+* un ensemble de roles ansible
+* un ensemble d'infrastructures permettant de tester les roles, ces infrastructures sont basées sur Vagrant.
+
+Exemple de creation d'une infrastructure de servers ubuntu, avec deux haproxy en haute disponibilité 
+avec keepalived (les prérequis sont supposés remplis).
+
+[source,bash]
+----
+$ get clone https://github.com/manueldeval/vagrant-ansible.git
+$ cd vagrant-ansible
+$ export box_type=ubuntu/vivid64
+$ export playbook_path=infrastructures/haproxy_simple
+$ vagrant up
+----
+
+Exemple de passage des tests unitaires de l'infrastructure créée :
+
+[source,bash]
+----
+$ ./python/testinfra.sh
+----
+
+
+== Installation ==
+
+Les prérequis sont les suivants :
+
+* Ansible
+* Vagrant
+* pytest
+
+=== Ansible ===
+
+*Ubuntu*
+
+[source,bash]
+----
+$ sudo apt-add-repository ppa:ansible/ansible -y
+$ sudo apt-get install software-properties-common
+$ sudo apt-get update
+$ sudo apt-get install ansible
+----
+
+*Centos*
+
+Via EPEL.
+
+[source,bash]
+----
+$ sudo yum install epel-release
+$ sudo yum install ansible
+----
+
+=== Vagrant ===
+
+*Ubuntu*
+
+[source,bash]
+----
+$ sudo apt-get install virtualbox
+$ sudo apt-get install vagrant
+----
+
+=== pytest ===
+
+[source,bash]
+----
+$ pip install -U pytest
+----
+
+=== Ensemble de box ===
+
+Il est recommandé de préinstaller un ensemble de "box vagrant".
+
+[source,bash]
+----
+$ vagrant add debian/jessie64
+$ vagrant add centos/7
+$ vagrant add ubuntu/vivid64
+----
+
+== Infrastructures ==
+
+=== haproxy_simple ===
+
+Load balancer en haute dispo.
+
+----
+                  *----- lb1: HAPROXY (192.168.33.10)
+                  |           Keepalived
+                  |                |
+    ----- VIP ----*                |
+  192.168.33.201  |                |
+                  |           Keepalived
+                  *----- lb2: Haproxy (192.168.33.11)
+----
+
+=== sample_http_service ===
+
+Simple service Json, à des fins de test.
+
+----
+    ------ service1: sample_http_service (192.168.33.10)
+----
