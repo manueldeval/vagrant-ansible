@@ -48,6 +48,13 @@ def test_if_haproxy_is_restarted_on_lb1_it_will_be_affected_on_lb1(infra):
 	assert  vipOnLb1 == True
 ----
 
+Suppression d'une infrastructure:
+
+[source,bash]
+----
+$ vagrant destroy --force
+----
+
 
 == Installation ==
 

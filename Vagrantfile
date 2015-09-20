@@ -26,6 +26,8 @@ Vagrant.configure(2) do |config|
         ansible.sudo = true
         ansible.playbook = "#{customArgs.playbook_path}/playbook.yml"
         ansible.inventory_path = "#{customArgs.playbook_path}/hosts"
-        ansible.extra_vars = "#{customArgs.playbook_path}/extra_vars.yml"
+        if File.exist?("#{customArgs.playbook_path}/extra_vars.yml")
+          ansible.extra_vars = "#{customArgs.playbook_path}/extra_vars.yml"
+        end
   end
 end
