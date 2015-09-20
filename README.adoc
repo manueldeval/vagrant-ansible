@@ -10,7 +10,7 @@ avec keepalived (les prérequis sont supposés remplis).
 
 [source,bash]
 ----
-$ get clone https://github.com/manueldeval/vagrant-ansible.git
+$ git clone https://github.com/manueldeval/vagrant-ansible.git
 $ cd vagrant-ansible
 $ export box_type=ubuntu/vivid64
 $ export playbook_path=infrastructures/haproxy_simple
