@@ -17,6 +17,19 @@ $ export playbook_path=infrastructures/haproxy_simple
 $ vagrant up
 ----
 
+Autre possibilité pour choisir sa box et l'infra :
+
+[source,bash]
+----
+$ git clone https://github.com/manueldeval/vagrant-ansible.git
+$ cd vagrant-ansible
+$ cat '{"box_type":"ubuntu/vivid64","playbook_path":"infrastructures/sample_http_service"}' > .config
+$ vagrant up
+----
+
+
+
+
 Exemple de passage des tests unitaires de l'infrastructure créée :
 
 [source,bash]
