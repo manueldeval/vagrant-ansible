@@ -1,0 +1,21 @@
+
+installation de babun
+
+rebase
+
+/usr/bin/rebaseall -v
+
+[source,bash]
+----
+@echo off
+
+REM If you used the stand Cygwin installer this will be C:\cygwin
+set CYGWIN=%USERPROFILE%\.babun\cygwin
+
+REM You can switch this to work with bash with %CYGWIN%\bin\bash.exe
+set SH=%CYGWIN%\bin\zsh.exe
+
+find . -name 'private_key' | xargs chmod 600
+
+"%SH%" -c "/bin/ansible-playbook %*"
+----

@@ -6,9 +6,7 @@ else
 fi
 
 if [ "x$INFRA" == "x" ]; then
-	echo "File"
 	INFRA=`cat .config | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["playbook_path"]';`
-	echo $INFRA
 fi
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
