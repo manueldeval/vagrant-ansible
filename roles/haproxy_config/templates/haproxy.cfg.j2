@@ -1,0 +1,136 @@
+{# ================================ #}
+{# MACRO BUILD ACL #}
+{# ================================ #}
+{% macro build_acl(backend) %}
+{% if backend.uri_starts is defined %}    acl {{backend.name}}_uri_starts path_beg {{backend.uri_starts}}
+{% endif %}
+{% if backend.domain_starts is defined %}    acl {{backend.name}}_domain_starts hdr_dom(host) -i {{backend.domain_starts}}
+{% endif %}
+{% endmacro %}
+
+{# ================================ #}
+{# MACRO BUILD ONE RULES (after acl) #}
+{# ================================ #}
+{% macro build_rules(backend) %}
+    use_backend {{backend.name}} if {% if backend.uri_starts is defined %}{{backend.name}}_uri_starts{% endif %} {% if backend.domain_starts is defined %}{{backend.name}}_domain_starts{% endif %}
+{% endmacro %}
+
+{# ================================ #}
+{# MACRO BUILD ONE FRONTEND          #}
+{# ================================ #}
+{% macro build_http_frontend(frontend) %}
+frontend {{frontend.name}}
+    bind {{frontend.listen_ip}}:{{frontend.listen_port}}
+    mode {{frontend.mode}}
+    stats {{frontend.stats_status}}   
+{% if frontend.stats_scope is defined %}
+    stats scope {{frontend.stats_scope}}
+{% endif %}
+    stats uri {{frontend.stats_uri}}
+    stats realm {{frontend.stats_realm}}
+    stats auth {{frontend.stats_admin}}:{{frontend.stats_password}}
+    option httpclose
+    option forwardfor
+    option http-server-close
+{% for backend in frontend.backends %}
+{{ build_acl(backend) }}
+{% endfor %}       
+{% for backend in frontend.backends %}
+{{ build_rules(backend) }}
+{% endfor %}       
+{% endmacro %}
+
+{# ================================ #}
+{# MACRO BUILD ONE BACKEND          #}
+{# ================================ #}
+{% macro build_http_backends(backend) %}
+backend {{backend.name}}
+    mode http
+    balance roundrobin
+
+{% if backend.httpchk is defined %}
+{% set check_str="check" %}
+    option httpchk {{backend.httpchk}}
+{% else %}
+{% set check_str="" %}
+{% endif %}
+{% if backend.cookie is defined %}
+    cookie {{backend.cookie}}
+{% endif %}
+{# ======================= #}
+{# Generate Servers by ip or hosts#}
+{# ======================= #}
+{% if backend.servers is defined %}
+{% for server in backend.servers %}
+{# ==== is backup ==== #}
+{% if server.backup is defined and server.backup == True %}{% set backup_str = "backup" %}
+{% else %}{% set backup_str = "" %}{% endif %}
+{# ==== get name or compute ==== #}
+{% if server.name is defined %}{% set name_str = server.name %}
+{% else %}{% set name_str = backend.name+"_"+server.host %}{% endif %}
+{# ==== coockie str ==== #}
+{% if backend.cookie is defined %}{% set cookie_str = "cookie "+name_str %}
+{% else %}{% set cookie_str = "" %}{% endif %}
+{# ==== generate line ==== #}
+    server {{name_str}} {{server.host}}:{{server.port}} {{check_str}} {{backup_str}} {{cookie_str}}
+{% endfor %}
+{% else %}
+{# ======================= #}
+{# Generate Servers by group #}
+{# ======================= #}
+{% for host in groups[backend.group.name] %}
+{# ==== compute name ==== #}
+{% set name_str = backend.group.name+"_"~loop.index %}
+{# ==== cookie str ==== #}
+{% if backend.cookie is defined %}{% set cookie_str = "cookie "+name_str %}
+{% else %}{% set cookie_str = "" %}{% endif %}
+{# ==== compute host ==== #}
+{% set host_str = hostvars[host]['ansible_'+backend.group.eth]['ipv4']['address'] %} 
+{# ==== One master multiple backups ==== #}
+{% if backend.group.nbr_masters is defined %}
+{% if backend.group.nbr_masters >= loop.index %}
+{% set backup_str = "" %}
+{% else %}
+{% set backup_str = "backup" %}
+{% endif %}
+{% else %}
+{% set backup_str = "" %}
+{% endif %}
+{# ==== generate line ==== #}
+    server {{name_str}} {{host_str}}:{{backend.group.port}} {{check_str}} {{backup_str}} {{cookie_str}}
+{% endfor %}
+{% endif %}
+{% endmacro %}
+
+{# ================================ #}
+{# GENERATE ALL          #}
+{# ================================ #}
+
+global
+  log 127.0.0.1 local0
+  log 127.0.0.1 local1 notice
+  maxconn 4096
+  debug
+
+defaults
+    log     global
+    option  dontlognull
+    retries {{ha_retries}}
+    option redispatch
+    timeout connect  {{ha_timeout_connect}}
+    timeout client  {{ha_timeout_client}}
+    timeout server  {{ha_timeout_server}}
+
+
+#### Define frontends
+{% for fronted in ha_www_frontends %}
+{{ build_http_frontend(fronted) }}
+{% endfor %}
+
+#### Define backends
+{% for fronted in ha_www_frontends %}
+{% for backend in fronted.backends %}
+{{ build_http_backends(backend) }}
+{% endfor %}
+{% endfor %}
+

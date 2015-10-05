@@ -1,0 +1,8 @@
+#=======================
+# Load balancers
+#=======================
+- hosts: lb
+  roles:
+    - { role: "haproxy", haproxy_vip: "{{lb_vip}}", haproxy_eth: "eth1" }
+    - haproxy_config
+

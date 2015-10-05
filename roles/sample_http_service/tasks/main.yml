@@ -36,15 +36,15 @@
 
 - template: 
     src: "sample_http_service.service"
-    dest: "/etc/systemd/system/sample_http_service.service"
+    dest: "/etc/systemd/system/{{sample_http_service_name}}.service"
     owner: "{{sample_http_service_user}}"
     group: "{{sample_http_service_group}}"   
     mode: u+rwx
 
 - service:
-    name: sample_http_service
+    name: "{{sample_http_service_name}}"
     enabled: yes
 
 - service:
-    name: sample_http_service
+    name: "{{sample_http_service_name}}"
     state: started
