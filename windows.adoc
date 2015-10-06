@@ -1,9 +1,15 @@
 
 installation de babun
 
+Suivre la doc :
+
+http://www.azavea.com/blogs/labs/2014/10/running-vagrant-with-ansible-provisioning-on-windows/
+
 rebase
 
 /usr/bin/rebaseall -v
+
+
 
 [source,bash]
 ----
