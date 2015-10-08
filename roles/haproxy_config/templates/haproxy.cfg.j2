@@ -16,5 +16,8 @@ defaults
     timeout client  {{ha_timeout_client}}
     timeout server  {{ha_timeout_server}}
 
+
 {% include "http_backends.j2" %}
+
+{% include "tcp_backends.j2" %}
 

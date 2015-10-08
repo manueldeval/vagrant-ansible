@@ -21,7 +21,7 @@
 {% macro build_http_frontend(frontend) %}
 frontend {{frontend.name}}
     bind {{frontend.listen_ip}}:{{frontend.listen_port}}
-    mode {{frontend.mode}}
+    mode http
     stats {{frontend.stats_status}}   
 {% if frontend.stats_scope is defined %}
     stats scope {{frontend.stats_scope}}

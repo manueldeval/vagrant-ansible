@@ -5,7 +5,6 @@ ha_timeout_server: 10000
 
 ha_www_frontends:
   - name: www
-    mode: http
     listen_ip: "0.0.0.0"
     listen_port: 80
     stats_status: enable
@@ -42,6 +41,26 @@ ha_www_frontends:
           port: 80
           eth: eth0
 
+ha_tcp_frontends:
+  - name: tcp1
+    listen_ip: "0.0.0.0"
+    listen_port: 8000
+    servers:
+      - name: local1
+        host: 127.0.0.1
+        port: 80
+      - host: localhost
+        port: 80
+        backup: true
+  - name: tcp2
+    tcpchk: True
+    listen_ip: "0.0.0.0"
+    listen_port: 8001  
+    group:
+      nbr_masters: 0
+      name: lb
+      port: 80
+      eth: eth0
 
 
 

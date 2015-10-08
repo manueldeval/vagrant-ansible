@@ -1,0 +1,59 @@
+
+{# ================================ #}
+{# MACRO BUILD ONE FRONTEND          #}
+{# ================================ #}
+{% macro build_tcp_frontend(frontend) %}
+frontend {{frontend.name}}
+    bind {{frontend.listen_ip}}:{{frontend.listen_port}}
+    mode tcp
+    balance roundrobin
+{% if frontend.tcpchk is defined %}
+{% set check_str="check" %}
+{% else %}
+{% set check_str="" %}
+{% endif %}
+{# ======================= #}
+{# Generate Servers by ip or hosts#}
+{# ======================= #}
+{% if frontend.servers is defined %}
+{% for server in frontend.servers %}
+{# ==== is backup ==== #}
+{% if server.backup is defined and server.backup == True %}{% set backup_str = "backup" %}
+{% else %}{% set backup_str = "" %}{% endif %}
+{# ==== get name or compute ==== #}
+{% if server.name is defined %}{% set name_str = server.name %}
+{% else %}{% set name_str = frontend.name+"_"+server.host %}{% endif %}
+{# ==== generate line ==== #}
+    server {{name_str}} {{server.host}}:{{server.port}} {{check_str}} {{backup_str}}
+{% endfor %}
+{% else %}
+{# ======================= #}
+{# Generate Servers by group #}
+{# ======================= #}
+{% for host in groups[frontend.group.name] %}
+{# ==== compute name ==== #}
+{% set name_str = frontend.group.name+"_"~loop.index %}
+{# ==== compute host ==== #}
+{% set host_str = hostvars[host]['ansible_'+frontend.group.eth]['ipv4']['address'] %} 
+{# ==== One master multiple backups ==== #}
+{% if frontend.group.nbr_masters is defined %}
+{% if frontend.group.nbr_masters >= loop.index %}
+{% set backup_str = "" %}
+{% else %}
+{% set backup_str = "backup" %}
+{% endif %}
+{% else %}
+{% set backup_str = "" %}
+{% endif %}
+{# ==== generate line ==== #}
+    server {{name_str}} {{host_str}}:{{frontend.group.port}} {{check_str}} {{backup_str}} 
+{% endfor %}
+{% endif %}
+{% endmacro %}
+
+#### Define tcp frontends
+{% for fronted in ha_tcp_frontends %}
+{{ build_tcp_frontend(fronted) }}
+{% endfor %}
+
+
