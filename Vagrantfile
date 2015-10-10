@@ -19,15 +19,6 @@ Vagrant.configure(2) do |config|
 
   serversFromJson = YAML::load(File.open("#{customArgs.playbook_path}/servers.yml"))
 
-  VagrantHelper.createServers(serversFromJson,config,customArgs.box_type)
-  AnsibleHelper.createAnsibleInventory(serversFromJson,"#{customArgs.playbook_path}/hosts");
-  
-  config.vm.provision "ansible" do |ansible|
-        ansible.sudo = true
-        ansible.playbook = "#{customArgs.playbook_path}/playbook.yml"
-        ansible.inventory_path = "#{customArgs.playbook_path}/hosts"
-        if File.exist?("#{customArgs.playbook_path}/extra_vars.yml")
-          ansible.extra_vars = "#{customArgs.playbook_path}/extra_vars.yml"
-        end
-  end
+  AnsibleHelper.createAnsibleInventory(serversFromJson,"#{customArgs.playbook_path}/hosts")
+  VagrantHelper.createServers(serversFromJson,config,customArgs.box_type,customArgs.playbook_path)
 end
