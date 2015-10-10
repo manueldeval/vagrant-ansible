@@ -15,8 +15,8 @@ class VagrantHelper
 				ansible.limit = 'all'
 				ansible.playbook = "#{playbook_path}/playbook.yml"
 				ansible.inventory_path = "#{playbook_path}/hosts"
-				if File.exist?("#{playbook_path}/extra_vars.yml")
-					ansible.extra_vars = "#{playbook_path}/extra_vars.yml"
+				if File.exist?("./extra_vars.yml")
+					ansible.extra_vars = "./extra_vars.yml"
 				end
     		end 	
 	    end
