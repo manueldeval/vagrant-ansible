@@ -6,4 +6,8 @@
     - haproxy
     - keepalived
     - psmisc
+  register: ha_installed
 
+- name: "Relachement des autorisations SELinux pour haproxy"
+  command: /usr/sbin/setsebool -P haproxy_connect_any=1
+  when: ha_installed | changed
