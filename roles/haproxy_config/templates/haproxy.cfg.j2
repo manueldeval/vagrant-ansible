@@ -17,7 +17,10 @@ defaults
     timeout server  {{ha_timeout_server}}
 
 
+{% if ha_www_frontends is defined and ha_www_frontends != "none" %}
 {% include "http_backends.j2" %}
+{% endif %}
 
+{% if ha_tcp_frontends is defined and ha_tcp_frontends != "none" %}
 {% include "tcp_backends.j2" %}
-
+{% endif %}

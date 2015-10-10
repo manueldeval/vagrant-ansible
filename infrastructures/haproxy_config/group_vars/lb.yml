@@ -1,0 +1,40 @@
+haproxy_vip: 192.168.33.201
+haproxy_eth: eth1
+
+
+ha_retries: 3
+ha_timeout_connect: 5000
+ha_timeout_client: 10000
+ha_timeout_server: 10000
+
+ha_www_frontends:
+  - name: www
+    listen_ip: "0.0.0.0"
+    listen_port: 80
+    stats_status: enable
+    stats_realm: LB_REALM
+    stats_admin: admin
+    stats_password: password
+    stats_uri: /stats
+    backends:
+      - name: rest1
+        httpchk: GET / HTTP/1.1\r\nHost:localhost
+        uri_starts: "/rest1"
+        servers:
+          - name: ser1
+            host: 192.168.33.11
+            port: 8001
+          - name: ser2
+            host: 192.168.33.12
+            port: 8001
+            backup: true
+      - name: rest2
+        httpchk: GET / HTTP/1.1\r\nHost:localhost
+        uri_starts: "/rest2"
+        group:
+          name: service
+          port: 8002
+          eth: eth1
+
+ha_tcp_frontends: none
+
