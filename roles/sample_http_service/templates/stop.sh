@@ -1,4 +1,4 @@
 #! /bin/bash
 
-ps -ef | grep 'python sample_http_service.py' | awk '{print $2}'| xargs kill -9
+pgrep -f 'python sample_http_service.py {{sample_http_service_port}}' | xargs kill -9
 

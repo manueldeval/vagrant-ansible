@@ -3,8 +3,8 @@
 #=======================
 - hosts: service
   roles:
-    - { role: "sample_http_service", sample_http_service_port: "8001", sample_http_service_name: "rest1" }
-    - { role: "sample_http_service", sample_http_service_port: "8002", sample_http_service_name: "rest2" }
+    - { role: "sample_http_service", sample_http_service_port: "8001", sample_http_service_name: "rest1" , sample_http_service_path: "/opt/rest1/"}
+    - { role: "sample_http_service", sample_http_service_port: "8002", sample_http_service_name: "rest2" , sample_http_service_path: "/opt/rest2/"}
 
 #=======================
 # Load balancer
