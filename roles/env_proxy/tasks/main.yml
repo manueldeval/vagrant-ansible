@@ -1,0 +1,22 @@
+- name: "Ajout du proxy http (shell)"
+  lineinfile:
+    dest: /etc/environment
+    state: present 
+    owner: root 
+    group: root
+    regexp: "http_proxy={{ http_proxy }}"
+    insertafter: EOF
+    line: "http_proxy={{ http_proxy }}"
+  when: http_proxy is defined
+
+- name: "Ajout du proxy https (shell)"
+  lineinfile:
+    dest: /etc/environment
+    state: present 
+    owner: root 
+    group: root
+    regexp: "https_proxy={{ https_proxy }}"
+    insertafter: EOF
+    line: "https_proxy={{ https_proxy }}"
+  when: https_proxy is defined
+

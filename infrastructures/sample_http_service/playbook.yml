@@ -1,3 +1,7 @@
+- hosts: all
+  roles:
+    - env_proxy
+
 - hosts: service
   roles:
     - { role: "sample_http_service", sample_http_service_port: "8001" }
