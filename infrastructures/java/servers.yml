@@ -1,0 +1,6 @@
+- name: serv
+  cpus: 1
+  memory: 512
+  ip: 192.168.33.10
+  groups:
+    - javasrv

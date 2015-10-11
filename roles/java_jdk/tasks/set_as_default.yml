@@ -1,0 +1,21 @@
+- name: "Ajout du JAVA_HOME java dans /etc/profile"
+  lineinfile:
+    dest: /etc/profile
+    state: present
+    owner: root
+    group: root
+    regexp: "export JAVA_HOME={{java_jdk_location}}/{{java_jdk_informations[java_jdk_version].output_dir}}/"
+    insertafter: EOF
+    line: "export JAVA_HOME={{java_jdk_location}}/{{java_jdk_informations[java_jdk_version].output_dir}}/"
+
+
+- name: "Ajout du PATH java dans /etc/profile"
+  lineinfile:
+    dest: /etc/profile
+    state: present 
+    owner: root
+    group: root
+    regexp: "export PATH=\\$PATH:{{java_jdk_location}}/{{java_jdk_informations[java_jdk_version].output_dir}}/bin/"
+    insertafter: EOF
+    line: "export PATH=$PATH:{{java_jdk_location}}/{{java_jdk_informations[java_jdk_version].output_dir}}/bin/"
+

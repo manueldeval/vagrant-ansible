@@ -1,0 +1,19 @@
+java_jdk_informations:
+  8u60:
+    uri: http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-linux-x64.tar.gz
+    archive_name: jdk-8u60-linux-x64.tar.gz
+    md5sum: b8ca513d4f439782c019cb78cd7fd101
+    output_dir: jdk1.8.0_60
+  7u79:
+    uri: http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-linux-x64.tar.gz
+    archive_name: jdk-7u79-linux-x64.tar.gz
+    md5sum: 9222e097e624800fdd9bfb568169ccad
+    output_dir: jdk1.7.0_79
+
+java_jdk_version: 8u60
+java_jdk_archive_dir: ~/ansible-dl/
+java_jdk_location: /opt/
+java_jdk_default: True
+java_jdk_owner: root
+java_jdk_group: root
+

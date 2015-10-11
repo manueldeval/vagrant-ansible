@@ -1,0 +1,9 @@
+- name: "Installation des dépendances"
+  apt:  
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - wget
+    - tar
+    - gzip
+    - zip

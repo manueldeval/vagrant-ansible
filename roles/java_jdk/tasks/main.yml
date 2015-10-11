@@ -1,0 +1,20 @@
+# installer md5sum/wget/tar/gunzip
+
+- include: prerequisites_deb.yml
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- include: prerequisites_rh.yml
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: "Vérification de l'existence préalable de java"
+  stat:
+    get_md5: True
+    path: "{{java_jdk_location}}/{{java_jdk_informations[java_jdk_version].output_dir}}/{{java_jdk_informations[java_jdk_version].archive_name}}"
+  register: file
+
+- include: install.yml
+  when: not file.stat.exists or not file.stat.md5 == "{{java_jdk_informations[java_jdk_version].md5sum}}"
+
+- include: set_as_default.yml
+  when: java_jdk_default
+

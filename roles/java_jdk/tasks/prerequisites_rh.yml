@@ -1,0 +1,9 @@
+- name: "Installation des dépendances"
+  yum:  
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - wget
+    - tar
+    - gzip
+    - zip

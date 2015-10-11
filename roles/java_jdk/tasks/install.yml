@@ -1,0 +1,30 @@
+
+- name: "Creation du repertoire cible"
+  file:
+    state: directory
+    path: "{{java_jdk_location}}/"
+    group: "{{java_jdk_group}}"
+    owner: "{{java_jdk_owner}}"
+    mode: 0755
+
+- name: "Copie de l'archive java (Http)"
+  command: 'wget -q -O {{java_jdk_location}}/{{java_jdk_informations[java_jdk_version].archive_name}} --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" {{java_jdk_informations[java_jdk_version].uri}}' 
+  when: java_jdk_informations[java_jdk_version].uri | match('http.*')
+
+- name: "Copie de l'archive java (File)"
+  copy: 
+    src: "{{java_jdk_informations[java_jdk_version].uri}}"
+    dest: "{{java_jdk_location}}/{{java_jdk_informations[java_jdk_version].archive_name}}"
+  when: not(java_jdk_informations[java_jdk_version].uri | match('http.*'))
+
+
+- name: "Decompression de l'archive"
+  unarchive:
+    src: "{{java_jdk_location}}/{{java_jdk_informations[java_jdk_version].archive_name}}"
+    dest: "{{java_jdk_location}}"
+    group: "{{java_jdk_group}}"
+    owner: "{{java_jdk_owner}}"
+    copy: no
+
+- name: "Copie de l'archive dans le répertoire cible"
+  command: "mv {{java_jdk_location}}/{{java_jdk_informations[java_jdk_version].archive_name}} {{java_jdk_location}}/{{java_jdk_informations[java_jdk_version].output_dir}}/{{java_jdk_informations[java_jdk_version].archive_name}}"

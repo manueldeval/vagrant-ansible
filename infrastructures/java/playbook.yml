@@ -1,0 +1,9 @@
+- hosts: all
+  roles:
+    - env_proxy
+
+- hosts: javasrv
+  roles:
+    - java_jdk
+
+
