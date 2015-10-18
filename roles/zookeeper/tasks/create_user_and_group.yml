@@ -1,0 +1,9 @@
+- name: "Creation du groupe si nécessaire"
+  group:
+    name: "{{zk_group}}"
+    state: present
+
+- name: "Creation du groupe si nécessaire"
+  user: 
+    name: "{{zk_owner}}"
+    group: "{{zk_group}}"

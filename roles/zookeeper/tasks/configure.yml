@@ -1,0 +1,28 @@
+
+- name: "Creation du repertoire data"
+  file:
+    state: directory
+    path: "{{zk_data_dir}}/"
+    group: "{{zk_group}}"
+    owner: "{{zk_owner}}"
+    mode: 0755
+
+- name: "Creation du repertoire log"
+  file:
+    state: directory
+    path: "{{zk_data_dir}}/log"
+    group: "{{zk_group}}"
+    owner: "{{zk_owner}}"
+    mode: 0755
+
+- name: "Generation du fichier zoo.conf"
+  template: 
+    src: "zoo.cfg.j2"
+    dest: "{{zk_location}}/{{zk_informations[zk_version].output_dir}}/conf/zoo.cfg"
+    group: "{{zk_group}}"
+    owner: "{{zk_owner}}" 
+  notify: restart zookeeper
+
+- name: "Gestion du fichier myid"
+  include: myid.yml
+  when: zk_cluster is defined and zk_cluster != "none"

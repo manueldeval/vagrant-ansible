@@ -1,0 +1,19 @@
+
+- name: "Creation du fichier de service zookeeper pour systemd"
+  template: 
+    src: "zookeeper.service.j2"
+    dest: "/etc/systemd/system/zookeeper.service"
+    owner: "root"
+    group: "root" 
+    mode: u+rwx
+  register: systemd_file
+  notify: restart zookeeper
+
+- name: reload systemd
+  command: systemctl daemon-reload
+  when: systemd_file | changed
+
+- service:
+    name: "zookeeper"
+    enabled: yes
+

@@ -1,0 +1,8 @@
+- hosts: all
+  roles:
+    - env_proxy
+
+- hosts: zookeeper
+  roles:
+    - java_jdk
+    - { role: "zookeeper" }

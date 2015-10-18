@@ -1,0 +1,32 @@
+# The number of milliseconds of each tick
+tickTime={{zk_tick_time}}
+# The number of ticks that the initial 
+# synchronization phase can take
+initLimit={{zk_init_limit}}
+# The number of ticks that can pass between 
+# sending a request and getting an acknowledgement
+syncLimit={{zk_sync_limit}}
+# the directory where the snapshot is stored.
+# do not use /tmp for storage, /tmp here is just 
+# example sakes.
+dataDir={{zk_data_dir}}/
+# the port at which the clients will connect
+clientPort={{zk_client_port}}
+# the maximum number of client connections.
+# increase this if you need to handle more clients
+maxClientCnxns={{zk_max_client_connexions}}
+
+{% if zk_cluster is defined and zk_cluster != "none" %}
+{% if zk_cluster.group is defined %}
+{% for host in groups[zk_cluster.group.name] %}
+server.{{loop.index}}={{hostvars[host]['ansible_'+zk_cluster.group.eth]['ipv4']['address']}}:{{zk_cluster_port}}
+{% endfor %}
+{% endif %}
+{% if zk_cluster.servers is defined %}
+{% for host in zk_cluster.servers %}
+server.{{loop.index}}={{host}}:{{zk_cluster_port}}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+

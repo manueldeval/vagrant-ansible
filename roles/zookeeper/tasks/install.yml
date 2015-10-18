@@ -1,0 +1,30 @@
+
+- name: "Creation du repertoire cible"
+  file:
+    state: directory
+    path: "{{zk_location}}/"
+    group: "{{zk_group}}"
+    owner: "{{zk_owner}}"
+    mode: 0755
+
+- name: "Copie de l'archive zookeeper (Http)"
+  command: 'wget -q -O {{zk_location}}/{{zk_informations[zk_version].archive_name}} --no-cookies --no-check-certificate {{zk_informations[zk_version].uri}}' 
+  when: zk_informations[zk_version].uri | match('http.*')
+
+- name: "Copie de l'archive zookeeper (File)"
+  copy: 
+    src: "{{zk_informations[zk_version].uri}}"
+    dest: "{{zk_location}}/{{zk_informations[zk_version].archive_name}}"
+  when: not(zk_informations[zk_version].uri | match('http.*'))
+
+
+- name: "Decompression de l'archive"
+  unarchive:
+    src: "{{zk_location}}/{{zk_informations[zk_version].archive_name}}"
+    dest: "{{zk_location}}"
+    group: "{{zk_group}}"
+    owner: "{{zk_owner}}"
+    copy: no
+
+- name: "Copie de l'archive dans le répertoire cible"
+  command: "mv {{zk_location}}/{{zk_informations[zk_version].archive_name}} {{zk_location}}/{{zk_informations[zk_version].output_dir}}/{{zk_informations[zk_version].archive_name}}"

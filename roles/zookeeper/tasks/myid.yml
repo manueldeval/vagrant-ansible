@@ -1,0 +1,20 @@
+- name: "Copie du shell de generation du fichier myid"
+  copy: 
+    src: generateMyId.sh 
+    dest: "{{zk_location}}/{{zk_informations[zk_version].output_dir}}/bin/generateMyId.sh"
+    group: "{{zk_group}}"
+    owner: "{{zk_owner}}"
+    mode: u+rxw
+
+- name: "Execute le script"
+  shell: "{{zk_location}}/{{zk_informations[zk_version].output_dir}}/bin/generateMyId.sh {{zk_location}}/{{zk_informations[zk_version].output_dir}}/conf/zoo.cfg {{zk_data_dir}}/myid"
+  register: result
+  changed_when: "result.rc != 0"
+  notify: restart zookeeper
+
+- name: "On s'assure des droits de myid"
+  file:
+    path: "{{zk_data_dir}}/myid"
+    mode: "644"
+    group: "{{zk_group}}"
+    owner: "{{zk_owner}}"

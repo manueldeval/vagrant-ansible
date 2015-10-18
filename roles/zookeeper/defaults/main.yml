@@ -1,0 +1,42 @@
+zk_informations:
+  "3.4.6":
+    uri: http://apache.mirrors.ovh.net/ftp.apache.org/dist/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz
+    archive_name: zookeeper-3.4.6.tar.gz
+    md5sum: 971c379ba65714fd25dc5fe8f14e9ad1
+    output_dir: zookeeper-3.4.6
+
+zk_version: "3.4.6"
+zk_location: /opt/
+zk_service_name: zookeeper
+zk_owner: zookeeper
+zk_group: zookeeper
+
+zk_tick_time: 2000
+zk_init_limit: 10
+zk_sync_limit: 5
+zk_data_dir: /var/zookeeper
+zk_client_port: 2181
+zk_max_client_connexions: 60
+zk_cluster_port: 2888:3888
+
+# set zk_cluster to none to disable the clustering (ie: one instance)
+# zk_cluster support :
+# === mono instance
+# zk_cluster: none 
+# === static servers
+# zk_cluster: 
+#  servers:
+#    - 192.168.33.10
+#    - 192.168.33.11
+#    - 192.168.33.12
+# === gathering from group
+# zk_cluster: 
+#  servers:
+#    group: 
+#      name: zookeeper
+#      eth: eth1
+#
+zk_cluster:
+  group: 
+    name: zookeeper
+    eth: eth1

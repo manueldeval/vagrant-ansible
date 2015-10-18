@@ -1,0 +1,37 @@
+{% if zk_cluster is defined and zk_cluster != "none" %}
+{% if zk_cluster.group is defined %}
+{% for host in groups[zk_cluster.group.name] %}
+
+server.{{loop.index}}={{hostvars[host]['ansible_'+zk_cluster.group.eth]['ipv4']['address']}}:{{zk_cluster_port}}
+{% endfor %}
+{% endif %}
+{% if zk_cluster.servers is defined %}
+{% for host in zk_cluster.servers %}
+server.{{loop.index}}={{host}}:{{zk_cluster_port}}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+ip addr show | grep "inet " | sed 's/.*inet //' | sed 's/\/.*//'
+cat /opt/zookeeper-3.4.6/conf/zoo.cfg | grep server | sed 's/server\.//' | sed 's/:.*//'
+./generateMyid.sh /opt/zookeeper-3.4.6/conf/zoo.cfg /var/zookeeper/myid
+
+
+#! /bin/bash
+CONF=$1
+MYID=$2
+
+ips=`ip addr show | grep "inet " | sed 's/.*inet //' | sed 's/\/.*//'`
+servers=`cat $CONF | grep server | sed 's/server\.//' | sed 's/:.*//'`
+
+for ip in $ips
+do
+	for server in $servers
+	do
+		echo "$server" | grep "$ip" &> /dev/null
+		RETVAL=$?
+		if [ $RETVAL -eq 0 ]; then
+		    echo $server | sed 's/=.*//' > $MYID
+		fi
+	done
+done

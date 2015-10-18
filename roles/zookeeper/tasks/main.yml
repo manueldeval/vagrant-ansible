@@ -1,0 +1,27 @@
+- include: prerequisites_deb.yml
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- include: prerequisites_rh.yml
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: "Verification des utilisateurs et groupes"
+  include: create_user_and_group.yml
+
+- name: "Vérification de l'existence préalable de zookeeper"
+  stat:
+    get_md5: True
+    path: "{{zk_location}}/{{zk_informations[zk_version].output_dir}}/{{zk_informations[zk_version].archive_name}}"
+  register: file
+
+- include: install.yml
+  when: not file.stat.exists or not file.stat.md5 == "{{zk_informations[zk_version].md5sum}}"
+
+- name: "Configuration de zookeeper"
+  include: configure.yml
+
+- name: "Enregistrement en tant que service"
+  include: systemd.yml
+
+- service:
+    name: zookeeper
+    state: started

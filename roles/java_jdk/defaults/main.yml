@@ -11,7 +11,6 @@ java_jdk_informations:
     output_dir: jdk1.7.0_79
 
 java_jdk_version: 8u60
-java_jdk_archive_dir: ~/ansible-dl/
 java_jdk_location: /opt/
 java_jdk_default: True
 java_jdk_owner: root

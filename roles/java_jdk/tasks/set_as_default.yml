@@ -19,3 +19,12 @@
     insertafter: EOF
     line: "export PATH=$PATH:{{java_jdk_location}}/{{java_jdk_informations[java_jdk_version].output_dir}}/bin/"
 
+- name: "Creation des liens symboliques dans /usr/bin/"
+  file:
+    src: "{{java_jdk_location}}/{{java_jdk_informations[java_jdk_version].output_dir}}/bin/{{item}}"
+    dest: /usr/bin/java
+    owner: root 
+    group: root 
+    state: link
+  with_items:
+    - java
